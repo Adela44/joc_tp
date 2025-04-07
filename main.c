@@ -2,47 +2,72 @@
 #include "raylib.h"
 #include <stdlib.h>
 
+
+
 int main(void)
 {
-  const int  lungime = 800;
-  const int latime =800;
-  InitWindow(latime,lungime,"Proiect joc");
-  SetTargetFPS(60);
-  Rectangle square = {5,5,25,25}; //x,y,latime,lungime patrat
-  int speed = 5;
-  while (!WindowShouldClose()) {
+    const int  lungime = 800;
+    const int latime = 800;
+    InitWindow(latime,lungime,"Proiect joc");
+    SetTargetFPS(60);
+    Rectangle player = {5,5,25,25}; //x,y,latime,lungime patrat
+    Rectangle square = {100,200,100,100};
+    int speed = 5;
+    int ok = 0;
+    while (!WindowShouldClose()) {
         if(IsKeyDown(KEY_RIGHT))
-         {
-             if (square.x + speed  <= 775){
-             square.x += speed;
-             }
-         }
+        {
+            if (player.x + speed  <= 775){
+                player.x += speed;
+            }
+            if (CheckCollisionRecs(player, square)){
+                player.x -= speed;
+                ok = 1;
+            }
+        }
         if(IsKeyDown(KEY_LEFT))
         {
-              if(square.x - speed >= 0){
-             square.x -= speed;
-              }
+            if(player.x - speed >= 0){
+                player.x -= speed;
+            }
+            if (CheckCollisionRecs(player, square)){
+                player.x += speed;
+                ok = 1;
+            }
+
         }
         if(IsKeyDown(KEY_DOWN))
-       {
-             if(square.y + speed <= 775){
-              square.y += speed; 
-             }          
-         }
-        if(IsKeyDown(KEY_UP))
-       {
-            if(square.y - speed >=0){
-            square.y -= speed;
+        {
+            if(player.y + speed <= 775){
+                player.y += speed;
             }
-       }
+            if (CheckCollisionRecs(player, square)){
+                player.y -= speed;
+                ok = 1;
+            }
+
+        }
+        if(IsKeyDown(KEY_UP))
+        {
+            if(player.y - speed >=0){
+                player.y -= speed;
+            }
+            if (CheckCollisionRecs(player, square)){
+                player.y += speed;
+                ok = 1;
+            }
+
+        }
+        if(ok == 1)
+        {
+            DrawRectangleRec(square,GRAY);
+        }
         BeginDrawing();
         ClearBackground(RAYWHITE);
-       DrawRectangleRec(square, BLACK);
-       // DrawText("Joc",400, 300,40, DARKGRAY);//pozx,pozy,font
+        DrawRectangleRec(player,BLACK);
         EndDrawing();
     }
-  
 
-   CloseWindow();
-   return 0;
+    CloseWindow();
+    return 0;
 }
