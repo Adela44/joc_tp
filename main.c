@@ -2,69 +2,85 @@
 #include "raylib.h"
 #include <stdlib.h>
 
-
+#define SCREEN_WIDTH 800
+#define SCREEN_HEIGHT 800
+#define BLOCK_SIZE 100
+#define MAZE_ROWS (SCREEN_HEIGHT / BLOCK_SIZE)
+#define MAZE_COLS (SCREEN_WIDTH / BLOCK_SIZE)
 
 int main(void)
 {
-    const int  lungime = 800;
-    const int latime = 800;
-    InitWindow(latime,lungime,"Proiect joc");
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Maze Touch Reveal");
     SetTargetFPS(60);
-    Rectangle player = {5,5,25,25}; //x,y,latime,lungime patrat
-    Rectangle square = {100,200,100,100};
+
+    Rectangle player = {0, 0, 25, 25};
     int speed = 5;
-    int ok = 0;
-    while (!WindowShouldClose()) {
-        if(IsKeyDown(KEY_RIGHT))
-        {
-            if (player.x + speed  <= 775){
-                player.x += speed;
-            }
-            if (CheckCollisionRecs(player, square)){
-                player.x -= speed;
-                ok = 1;
-            }
-        }
-        if(IsKeyDown(KEY_LEFT))
-        {
-            if(player.x - speed >= 0){
-                player.x -= speed;
-            }
-            if (CheckCollisionRecs(player, square)){
-                player.x += speed;
-                ok = 1;
-            }
+     bool won = false;
+    // Maze layout
+    int maze[MAZE_ROWS][MAZE_COLS] = {{0,0,0,0,0,0,1,1},
+                                      {1,0,1,1,1,0,1,1},
+                                      {1,0,0,0,1,0,1,1},
+                                      {1,1,1,0,1,0,0,0},
+                                      {0,0,0,0,0,1,1,1},
+                                      {0,1,1,0,1,0,0,0},
+                                      {0,0,0,1,0,0,1,0},
+                                      {0,1,0,0,0,1,1,0}};
+    bool visible[MAZE_ROWS][MAZE_COLS] = {0};
 
-        }
-        if(IsKeyDown(KEY_DOWN))
-        {
-            if(player.y + speed <= 775){
-                player.y += speed;
-            }
-            if (CheckCollisionRecs(player, square)){
-                player.y -= speed;
-                ok = 1;
-            }
 
-        }
-        if(IsKeyDown(KEY_UP))
-        {
-            if(player.y - speed >=0){
-                player.y -= speed;
-            }
-            if (CheckCollisionRecs(player, square)){
-                player.y += speed;
-                ok = 1;
-            }
 
+    while (!WindowShouldClose())
+    {
+        if (!won) {
+        Rectangle prevPlayer = player;
+
+        // Move player
+       if (IsKeyDown(KEY_RIGHT) && player.x + speed <= SCREEN_WIDTH - player.width)
+            player.x += speed;
+        if (IsKeyDown(KEY_LEFT) && player.x - speed >= 0)
+            player.x -= speed;
+        if (IsKeyDown(KEY_DOWN) && player.y + speed <= SCREEN_HEIGHT - player.height)
+            player.y += speed;
+        if (IsKeyDown(KEY_UP) && player.y - speed >= 0)
+            player.y -= speed;
+
+        Rectangle goal = {700, 700, BLOCK_SIZE, BLOCK_SIZE};
+        // Check for collision and revert if needed
+        for (int row = 0; row < MAZE_ROWS; row++) {
+            for (int col = 0; col < MAZE_COLS; col++) {
+                if (maze[row][col] == 1) {
+                    Rectangle block = {col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE};
+                    if (CheckCollisionRecs(player, block)) {
+                        // Reveal the block
+                        visible[row][col] = true;
+                        // Revert movement
+                        player = prevPlayer;
+                    }
+                }
+            }
         }
-        if(ok == 1)
-        {
-            DrawRectangleRec(square,GRAY);
+         if (CheckCollisionRecs(player, goal)) {
+                won = true;
+            }
         }
+
+        // Drawing
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        DrawRectangleRec(player,BLACK);
+
+        // Draw visible maze blocks
+        for (int row = 0; row < MAZE_ROWS; row++) {
+            for (int col = 0; col < MAZE_COLS; col++) {
+                if (maze[row][col] == 1 && visible[row][col]) {
+                    DrawRectangle(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE, GRAY);
+                }
+            }
+        }
+         if (won) {
+            DrawText("You Won!", SCREEN_WIDTH/2 - 100, SCREEN_HEIGHT/2 - 20, 40, DARKGREEN);
+        }
+
+        DrawRectangleRec(player, BLACK);
         EndDrawing();
     }
 
