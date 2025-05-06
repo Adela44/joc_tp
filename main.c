@@ -100,7 +100,7 @@ int main(void)
             }
         }
          if (won) {
-           DrawText("Felicitari, ai terminat!", SCREEN_WIDTH/2 - 175, SCREEN_HEIGHT/2 - 20, 40, DARKGREEN);
+           DrawText("Game Over!", SCREEN_WIDTH/2 - 175, SCREEN_HEIGHT/2 - 20, 40, DARKGREEN);
         }
 
         DrawRectangleRec(player, BLACK);
