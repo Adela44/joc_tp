@@ -16,7 +16,7 @@ int main(void)
     Rectangle player = {0, 0, 25, 25};
     int speed = 5;
      bool won = false;
-    // Maze layout
+
     int maze[MAZE_ROWS][MAZE_COLS] = {{0,0,0,0,0,0,1,1},
                                       {1,0,1,1,1,0,1,1},
                                       {1,0,0,0,1,0,1,1},
@@ -34,7 +34,7 @@ int main(void)
         if (!won) {
         Rectangle prevPlayer = player;
 
-        // Move player
+   
        if (IsKeyDown(KEY_RIGHT) && player.x + speed <= SCREEN_WIDTH - player.width)
             player.x += speed;
         if (IsKeyDown(KEY_LEFT) && player.x - speed >= 0)
@@ -45,7 +45,7 @@ int main(void)
             player.y -= speed;
 
         Rectangle goal = {700, 700, BLOCK_SIZE, BLOCK_SIZE};
-        // Check for collision and revert if needed
+ 
         for (int row = 0; row < MAZE_ROWS; row++) {
             for (int col = 0; col < MAZE_COLS; col++) {
                 if (maze[row][col] == 1) {
@@ -64,11 +64,11 @@ int main(void)
             }
         }
 
-        // Drawing
+        
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
-        // Draw visible maze blocks
+      
         for (int row = 0; row < MAZE_ROWS; row++) {
             for (int col = 0; col < MAZE_COLS; col++) {
                 if (maze[row][col] == 1 && visible[row][col]) {
@@ -77,7 +77,7 @@ int main(void)
             }
         }
          if (won) {
-            DrawText("You Won!", SCREEN_WIDTH/2 - 100, SCREEN_HEIGHT/2 - 20, 40, DARKGREEN);
+            DrawText("Felicitari, ai castigat!", SCREEN_WIDTH/2 - 100, SCREEN_HEIGHT/2 - 20, 40, DARKGREEN);
         }
 
         DrawRectangleRec(player, BLACK);
