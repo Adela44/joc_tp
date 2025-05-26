@@ -1,7 +1,9 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Wpedantic
 LDFLAGS = -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
-SRC = main.c
+
+# All source files
+SRC = main.c level1.c level2.c
 
 # Output executable
 OUT = mygame
@@ -15,3 +17,4 @@ $(OUT): $(SRC)
 # Clean build files
 clean:
 	rm -f $(OUT)
+
