@@ -80,9 +80,6 @@ void GameLevel1()
                 }
             }
         }
-         if (won) {
-           DrawText("Level1 finished!", SCREEN_WIDTH/2 - 175, SCREEN_HEIGHT/2 - 20, 40, DARKGREEN);
-        }
 
         DrawRectangleRec(player, BLACK);
 }
